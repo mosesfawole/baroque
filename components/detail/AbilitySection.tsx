@@ -136,7 +136,7 @@ export default function AbilitySection({ character }: Props) {
                 className="text-sm leading-relaxed italic"
                 style={{ color: character.color }}
               >
-                "{character.personality}"
+                &quot;{character.personality}&quot;
               </p>
             </motion.div>
           </div>

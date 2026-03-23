@@ -6,7 +6,6 @@ import {
   MeshDistortMaterial,
   Float,
   Environment,
-  Torus,
   Sphere,
   Box,
   Octahedron,
@@ -120,8 +119,11 @@ function Particles({ color }: { color: string }) {
     const count = 80;
     const positions = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
+      // eslint-disable-next-line react-hooks/purity
       const radius = 2.5 + Math.random() * 1.5;
+      // eslint-disable-next-line react-hooks/purity
       const theta = Math.random() * Math.PI * 2;
+      // eslint-disable-next-line react-hooks/purity
       const phi = Math.acos(2 * Math.random() - 1);
       positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
       positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);

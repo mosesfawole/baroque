@@ -62,8 +62,8 @@ export default function BaroqueSection() {
               Operating under the guise of a bounty hunting agency, Baroque
               Works was a massive criminal organization led by the Warlord of
               the Sea, Crocodile. With agents ranked by number and partnered by
-              gender, the organization's true goal was to seize control of the
-              kingdom of Alabasta.
+              gender, the organization&apos;s true goal was to seize control of
+              the kingdom of Alabasta.
             </motion.p>
 
             <motion.div
