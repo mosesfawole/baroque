@@ -39,7 +39,7 @@ export default function CharacterScene({ character }: Props) {
             className="mb-3 text-xs font-medium uppercase tracking-[0.4em]"
             style={{ color: character.color }}
           >
-            3D Interactive
+            Interactive exhibit
           </p>
           <h2
             className="mb-4 font-display font-bold"
@@ -49,12 +49,12 @@ export default function CharacterScene({ character }: Props) {
               letterSpacing: "-0.01em",
             }}
           >
-            Inspect the Model
+            Inspect the form
           </h2>
           <p className="text-sm" style={{ color: "rgba(245,240,232,0.4)" }}>
             {reduceMotion
-              ? "Interactive 3D is paused because reduced motion is enabled."
-              : "Load the interactive viewer when you are ready to explore it."}
+              ? "Interactive motion is paused because reduced motion is enabled."
+              : "Load the 3D viewer when you are ready to rotate and inspect the profile form."}
           </p>
         </motion.div>
 
@@ -100,7 +100,7 @@ export default function CharacterScene({ character }: Props) {
                 >
                   {reduceMotion
                     ? "Reduced-motion preferences are being respected to keep the page calmer and lighter."
-                    : "The 3D scene loads on demand so the rest of the page stays fast and responsive."}
+                    : "The 3D scene loads on demand so the dossier stays fast while still giving the page a stronger centerpiece."}
                 </p>
               </div>
               {!reduceMotion ? (

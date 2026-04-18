@@ -1,4 +1,5 @@
 "use client";
+
 import { motion } from "framer-motion";
 import type { Character } from "@/types";
 
@@ -6,45 +7,67 @@ interface Props {
   character: Character;
 }
 
+function getLeadSentence(character: Character) {
+  const firstSentence = character.description.split(". ")[0];
+  return firstSentence.endsWith(".") ? firstSentence : `${firstSentence}.`;
+}
+
 export default function CharacterHero({ character }: Props) {
+  const specialtyLabel =
+    character.ability.type === "None"
+      ? "Signature style"
+      : `${character.ability.type} fruit`;
+
+  const highlights = [
+    {
+      label: "Faction",
+      value: character.faction === "baroque" ? "Baroque Works" : "Straw Hat Pirates",
+    },
+    {
+      label: "Role",
+      value: character.role,
+    },
+    {
+      label: character.bounty ? "Bounty" : "Specialty",
+      value: character.bounty ?? specialtyLabel,
+    },
+  ];
+
   return (
     <section
-      className="relative min-h-[60vh] flex items-end pb-16 pt-32 px-6 md:px-12 overflow-hidden"
+      className="relative overflow-hidden px-6 pb-18 pt-32 md:px-12 md:pb-24"
       style={{ background: "#0a0a0a" }}
     >
-      {/* Background glow */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: `radial-gradient(ellipse at 60% 40%, ${character.color}18 0%, transparent 65%)`,
+          background: `radial-gradient(circle at 72% 30%, ${character.color}22 0%, transparent 42%)`,
         }}
       />
 
-      {/* Corner accents */}
       <div
-        className="absolute top-16 left-6 md:left-12 w-16 h-px"
+        className="absolute left-6 top-16 h-px w-16 md:left-12"
         style={{
           background: `linear-gradient(90deg, ${character.color}, transparent)`,
         }}
       />
       <div
-        className="absolute top-16 left-6 md:left-12 w-px h-16"
+        className="absolute left-6 top-16 h-16 w-px md:left-12"
         style={{
           background: `linear-gradient(180deg, ${character.color}, transparent)`,
         }}
       />
 
-      <div className="max-w-7xl mx-auto w-full">
+      <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)] lg:items-end">
         <div className="max-w-3xl">
-          {/* Faction + codename */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="flex items-center gap-4 mb-6"
+            className="mb-6 flex flex-wrap items-center gap-4"
           >
             <span
-              className="text-[10px] tracking-[0.4em] uppercase font-medium px-3 py-1.5 rounded-sm"
+              className="rounded-full px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.32em]"
               style={{
                 background: `${character.color}18`,
                 color: character.color,
@@ -54,73 +77,93 @@ export default function CharacterHero({ character }: Props) {
               {character.codename}
             </span>
             <span
-              className="text-[10px] tracking-[0.3em] uppercase"
-              style={{ color: "rgba(245,240,232,0.3)" }}
+              className="eyebrow"
+              style={{ color: "rgba(245,240,232,0.32)" }}
             >
-              {character.faction === "baroque"
-                ? "Baroque Works"
-                : "Straw Hat Pirates"}
+              Field dossier
             </span>
           </motion.div>
 
-          {/* Name */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="font-display font-black leading-none mb-4"
+            className="mb-5 font-display font-black leading-none"
             style={{
-              fontSize: "clamp(48px, 8vw, 96px)",
+              fontSize: "clamp(54px, 8vw, 104px)",
               color: "#f5f0e8",
-              letterSpacing: "-0.02em",
+              letterSpacing: "-0.03em",
             }}
           >
             {character.name}
           </motion.h1>
 
-          {/* Role */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-base md:text-lg mb-6 font-light"
-            style={{ color: "rgba(245,240,232,0.5)" }}
+            className="mb-8 max-w-2xl text-base leading-relaxed md:text-lg"
+            style={{ color: "rgba(245,240,232,0.58)" }}
           >
-            {character.role}
+            {getLeadSentence(character)}
           </motion.p>
-
-          {/* Bounty */}
-          {character.bounty && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="inline-flex items-center gap-3"
-            >
-              <span
-                className="text-xs tracking-[0.3em] uppercase"
-                style={{ color: "rgba(245,240,232,0.3)" }}
-              >
-                Bounty
-              </span>
-              <span
-                className="font-display font-bold text-lg"
-                style={{ color: character.color }}
-              >
-                {character.bounty}
-              </span>
-            </motion.div>
-          )}
         </div>
-      </div>
 
-      {/* Bottom fade */}
-      <div
-        className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none"
-        style={{
-          background: "linear-gradient(180deg, transparent, #0a0a0a)",
-        }}
-      />
+        <motion.aside
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.25 }}
+          className="panel-dark rounded-[1.85rem] p-6 md:p-7"
+        >
+          <p
+            className="eyebrow mb-5"
+            style={{ color: "rgba(245,240,232,0.34)" }}
+          >
+            Quick read
+          </p>
+
+          <div className="space-y-4">
+            {highlights.map((item) => (
+              <div
+                key={item.label}
+                className="rounded-[1.25rem] px-4 py-4"
+                style={{
+                  background: "rgba(255,255,255,0.03)",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                }}
+              >
+                <p
+                  className="mb-2 text-[10px] uppercase tracking-[0.26em]"
+                  style={{ color: "rgba(245,240,232,0.34)" }}
+                >
+                  {item.label}
+                </p>
+                <p className="text-sm leading-relaxed text-baroque-cream">
+                  {item.value}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div
+            className="mt-5 rounded-[1.25rem] px-4 py-4"
+            style={{
+              background: `${character.color}12`,
+              border: `1px solid ${character.color}28`,
+            }}
+          >
+            <p
+              className="mb-2 text-[10px] uppercase tracking-[0.26em]"
+              style={{ color: "rgba(245,240,232,0.34)" }}
+            >
+              Signature
+            </p>
+            <p className="text-sm font-medium" style={{ color: character.color }}>
+              {character.ability.name}
+            </p>
+          </div>
+        </motion.aside>
+      </div>
     </section>
   );
 }

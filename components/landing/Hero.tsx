@@ -3,13 +3,13 @@
 import { useRef } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import { ArrowRight } from "lucide-react";
 import {
   motion,
   useReducedMotion,
   useScroll,
   useTransform,
 } from "framer-motion";
-import { ArrowDown } from "lucide-react";
 
 const FloatingOrb = dynamic(() => import("@/components/three/FloatingOrb"), {
   ssr: false,
@@ -24,6 +24,12 @@ const FloatingOrb = dynamic(() => import("@/components/three/FloatingOrb"), {
     />
   ),
 });
+
+const heroFacts = [
+  { value: "18", label: "profiles" },
+  { value: "2", label: "factions" },
+  { value: "1", label: "Alabasta conflict" },
+];
 
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -42,29 +48,28 @@ export default function Hero() {
   const scale = useTransform(
     scrollYProgress,
     [0, 1],
-    [1, reduceMotion ? 1 : 0.9],
+    [1, reduceMotion ? 1 : 0.92],
   );
 
   return (
     <section
       ref={containerRef}
-      className="relative flex min-h-screen items-center justify-center overflow-hidden"
-      style={{ background: "#0a0a0a" }}
+      className="relative flex min-h-screen items-center justify-center overflow-hidden px-6 py-28 md:px-12"
     >
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse at center, rgba(139,26,26,0.15) 0%, rgba(10,10,10,0) 70%)",
+            "radial-gradient(circle at 22% 20%, rgba(201,168,76,0.12), transparent 22%), radial-gradient(circle at 80% 18%, rgba(139,26,26,0.18), transparent 24%)",
         }}
       />
 
       <div
-        className="absolute top-0 left-0 h-px w-32"
+        className="absolute left-0 top-0 h-px w-32"
         style={{ background: "linear-gradient(90deg, #c9a84c, transparent)" }}
       />
       <div
-        className="absolute top-0 left-0 h-32 w-px"
+        className="absolute left-0 top-0 h-32 w-px"
         style={{ background: "linear-gradient(180deg, #c9a84c, transparent)" }}
       />
       <div
@@ -78,25 +83,25 @@ export default function Hero() {
 
       <motion.div
         aria-hidden="true"
-        className="absolute right-0 top-0 bottom-0 w-full pointer-events-none md:w-1/2 md:pointer-events-auto"
+        className="absolute inset-y-0 right-0 w-full pointer-events-none md:w-1/2 md:pointer-events-auto"
         style={{ opacity, y }}
       >
         {!reduceMotion ? <FloatingOrb /> : null}
       </motion.div>
 
       <motion.div
-        className="relative z-10 mx-auto w-full max-w-7xl px-6 md:px-12"
+        className="relative z-10 mx-auto grid w-full max-w-7xl gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(280px,0.75fr)] lg:items-end"
         style={{ y, scale }}
       >
-        <div className="max-w-2xl">
+        <div className="max-w-3xl">
           <motion.p
             initial={reduceMotion ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="mb-6 text-xs font-medium uppercase tracking-[0.4em]"
+            className="eyebrow mb-6"
             style={{ color: "#c9a84c" }}
           >
-            One Piece Universe
+            One Piece dossier
           </motion.p>
 
           <motion.h1
@@ -105,14 +110,14 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="mb-6 font-display font-black leading-none"
             style={{
-              fontSize: "clamp(56px, 10vw, 120px)",
+              fontSize: "clamp(56px, 10vw, 124px)",
               color: "#f5f0e8",
-              letterSpacing: "-0.02em",
+              letterSpacing: "-0.03em",
             }}
           >
             BAROQUE
             <br />
-            <span className="gold-text" style={{ fontSize: "0.85em" }}>
+            <span className="gold-text" style={{ fontSize: "0.84em" }}>
               WORKS
             </span>
           </motion.h1>
@@ -120,82 +125,96 @@ export default function Hero() {
           <motion.p
             initial={reduceMotion ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="mb-10 max-w-[480px] text-base font-light leading-relaxed md:text-lg"
-            style={{
-              color: "rgba(245,240,232,0.55)",
-            }}
+            transition={{ duration: 0.6, delay: 0.45 }}
+            className="mb-10 max-w-[560px] text-base leading-relaxed md:text-lg"
+            style={{ color: "rgba(245,240,232,0.62)" }}
           >
-            The secret criminal organization operating under the cover of a
-            bounty hunting agency. Explore the agents and the crew who stopped
-            them.
+            A stylized character archive for the Alabasta saga, pairing the
+            secret structure of Baroque Works with the pirate crew that tore it
+            apart. Browse each profile like a field file, not a wiki entry.
           </motion.p>
 
           <motion.div
             initial={reduceMotion ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.7 }}
-            className="flex flex-wrap gap-4"
+            transition={{ duration: 0.6, delay: 0.6 }}
+            className="mb-10 flex flex-wrap gap-4"
           >
             <Link
               href="/baroque"
-              className="group flex items-center gap-2 px-8 py-3.5 text-sm font-medium uppercase tracking-widest transition-all duration-300"
+              className="inline-flex items-center gap-3 rounded-full px-7 py-3.5 text-sm font-semibold uppercase tracking-[0.26em] transition-transform duration-300 hover:-translate-y-0.5"
               style={{
-                background: "linear-gradient(135deg, #c9a84c, #8b5e14)",
+                background: "linear-gradient(135deg, #d4b155, #8b5e14)",
                 color: "#0a0a0a",
-                borderRadius: "2px",
+                boxShadow: "0 18px 36px rgba(201,168,76,0.2)",
               }}
             >
-              Explore Agents
-              <motion.span
-                aria-hidden="true"
-                animate={reduceMotion ? undefined : { x: [0, 4, 0] }}
-                transition={
-                  reduceMotion ? undefined : { duration: 1.5, repeat: Infinity }
-                }
-              >
-                →
-              </motion.span>
+              Open Baroque dossiers
+              <ArrowRight size={16} />
             </Link>
 
             <Link
               href="/strawhat"
-              className="flex items-center gap-2 px-8 py-3.5 text-sm font-medium uppercase tracking-widest transition-all duration-300"
+              className="inline-flex items-center gap-3 rounded-full px-7 py-3.5 text-sm font-semibold uppercase tracking-[0.26em] transition-transform duration-300 hover:-translate-y-0.5"
               style={{
-                background: "transparent",
-                color: "rgba(245,240,232,0.7)",
-                border: "1px solid rgba(245,240,232,0.2)",
-                borderRadius: "2px",
+                background: "rgba(255,255,255,0.03)",
+                color: "#f5f0e8",
+                border: "1px solid rgba(255,255,255,0.14)",
+                backdropFilter: "blur(14px)",
               }}
             >
-              Straw Hat Crew
+              Meet the Straw Hats
+              <ArrowRight size={16} />
             </Link>
           </motion.div>
-        </div>
-      </motion.div>
 
-      <motion.div
-        aria-hidden="true"
-        className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2"
-        initial={reduceMotion ? false : { opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2 }}
-        style={{ opacity }}
-      >
-        <p
-          className="text-[10px] uppercase tracking-[0.3em]"
-          style={{ color: "rgba(245,240,232,0.3)" }}
+          <motion.p
+            initial={reduceMotion ? false : { opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.72 }}
+            className="text-sm uppercase tracking-[0.24em]"
+            style={{ color: "rgba(245,240,232,0.34)" }}
+          >
+            Built around contrast, hierarchy, and character presence.
+          </motion.p>
+        </div>
+
+        <motion.aside
+          initial={reduceMotion ? false : { opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.65, delay: 0.5 }}
+          className="panel-dark rounded-[1.75rem] p-6"
         >
-          Scroll
-        </p>
-        <motion.div
-          animate={reduceMotion ? undefined : { y: [0, 6, 0] }}
-          transition={
-            reduceMotion ? undefined : { duration: 1.5, repeat: Infinity }
-          }
-        >
-          <ArrowDown size={14} style={{ color: "#c9a84c" }} />
-        </motion.div>
+          <p
+            className="eyebrow mb-6"
+            style={{ color: "rgba(245,240,232,0.36)" }}
+          >
+            Archive overview
+          </p>
+
+          <div className="space-y-4">
+            {heroFacts.map((fact) => (
+              <div
+                key={fact.label}
+                className="flex items-end justify-between gap-4 border-b pb-4"
+                style={{ borderColor: "rgba(255,255,255,0.08)" }}
+              >
+                <p
+                  className="font-display text-4xl font-black"
+                  style={{ color: "#f5f0e8" }}
+                >
+                  {fact.value}
+                </p>
+                <p
+                  className="text-[11px] uppercase tracking-[0.24em]"
+                  style={{ color: "rgba(245,240,232,0.38)" }}
+                >
+                  {fact.label}
+                </p>
+              </div>
+            ))}
+          </div>
+        </motion.aside>
       </motion.div>
     </section>
   );

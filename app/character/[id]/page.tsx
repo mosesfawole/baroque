@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { notFound } from "next/navigation";
 import AbilitySection from "@/components/detail/AbilitySection";
 import CharacterHero from "@/components/detail/CharacterHero";
@@ -58,9 +59,9 @@ export default async function CharacterDetailPage({
           <Link
             href={backHref}
             aria-label={`Back to ${backLabel}`}
-            className="flex items-center gap-2 rounded-sm px-4 py-2 text-xs font-medium uppercase tracking-widest transition-all duration-300 glass-dark gold-border hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-baroque-gold focus-visible:ring-offset-2 focus-visible:ring-offset-baroque-black"
+            className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-xs font-semibold uppercase tracking-[0.26em] transition-all duration-300 glass-dark gold-border hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-baroque-gold focus-visible:ring-offset-2 focus-visible:ring-offset-baroque-black"
           >
-            <span aria-hidden="true">←</span>
+            <ArrowLeft size={14} />
             {backLabel}
           </Link>
         </div>
@@ -97,32 +98,37 @@ function NextCharacterNav({
       aria-label="Character navigation"
       className="border-t border-baroque-border bg-baroque-deep px-6 py-16 md:px-12"
     >
-      <div className="mx-auto flex max-w-7xl flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-        <Link href={`/character/${previous.id}`} className="group flex flex-col gap-1">
-          <span className="text-[10px] uppercase tracking-[0.3em] text-baroque-muted">
-            Previous
+      <div className="mx-auto grid max-w-7xl gap-4 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:items-center">
+        <Link
+          href={`/character/${previous.id}`}
+          className="panel-dark group rounded-[1.5rem] p-5 transition-transform duration-300 hover:-translate-y-0.5"
+        >
+          <span className="mb-3 inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.26em] text-baroque-muted">
+            <ArrowLeft size={14} />
+            Previous dossier
           </span>
-          <span className="font-display font-bold text-baroque-cream transition-colors duration-300 group-hover:text-baroque-gold">
+          <p className="font-display text-xl font-bold text-baroque-cream transition-colors duration-300 group-hover:text-baroque-gold">
             {previous.name}
-          </span>
+          </p>
         </Link>
 
         <div
           aria-hidden="true"
-          className="hidden h-1.5 w-1.5 rounded-full sm:block"
+          className="hidden h-2.5 w-2.5 rounded-full md:block"
           style={{ background: characters[0]?.color ?? "#c9a84c" }}
         />
 
         <Link
           href={`/character/${next.id}`}
-          className="group flex flex-col gap-1 text-left sm:text-right"
+          className="panel-dark group rounded-[1.5rem] p-5 text-left transition-transform duration-300 hover:-translate-y-0.5 md:text-right"
         >
-          <span className="text-[10px] uppercase tracking-[0.3em] text-baroque-muted">
-            Next
+          <span className="mb-3 inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.26em] text-baroque-muted md:justify-end">
+            Next dossier
+            <ArrowRight size={14} />
           </span>
-          <span className="font-display font-bold text-baroque-cream transition-colors duration-300 group-hover:text-baroque-gold">
+          <p className="font-display text-xl font-bold text-baroque-cream transition-colors duration-300 group-hover:text-baroque-gold">
             {next.name}
-          </span>
+          </p>
         </Link>
       </div>
     </section>

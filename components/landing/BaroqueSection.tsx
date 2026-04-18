@@ -1,7 +1,15 @@
 "use client";
-import Link from "next/link";
-import { motion, useInView } from "framer-motion";
+
 import { useRef } from "react";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { motion, useInView } from "framer-motion";
+
+const facts = [
+  { title: "Numbered hierarchy", text: "Each pairing turns identity into rank and obedience into strategy." },
+  { title: "Public disguise", text: "The organization hides behind bounty hunting while operating as a shadow state." },
+  { title: "Single objective", text: "Every role ultimately points back to Crocodile's takeover plan for Alabasta." },
+];
 
 export default function BaroqueSection() {
   const ref = useRef(null);
@@ -10,122 +18,103 @@ export default function BaroqueSection() {
   return (
     <section
       ref={ref}
-      className="relative py-32 md:py-48 overflow-hidden"
+      className="relative overflow-hidden px-6 py-32 md:px-12 md:py-44"
       style={{ background: "#0a0a0a" }}
     >
-      {/* Background texture */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 80% 50%, rgba(139,26,26,0.08) 0%, transparent 60%)",
+            "radial-gradient(circle at 80% 50%, rgba(139,26,26,0.1) 0%, transparent 58%)",
         }}
       />
 
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-          {/* Left — text */}
-          <div>
-            <motion.p
-              initial={{ opacity: 0, x: -20 }}
-              animate={inView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.6 }}
-              className="text-xs tracking-[0.4em] uppercase mb-4 font-medium"
-              style={{ color: "#c9a84c" }}
-            >
-              The Organization
-            </motion.p>
+      <div className="mx-auto grid max-w-7xl gap-14 lg:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)] lg:items-center">
+        <div>
+          <motion.p
+            initial={{ opacity: 0, x: -20 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.6 }}
+            className="eyebrow mb-4"
+            style={{ color: "#c9a84c" }}
+          >
+            The organization
+          </motion.p>
 
-            <motion.h2
-              initial={{ opacity: 0, y: 30 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, delay: 0.1 }}
-              className="font-display font-black mb-6 leading-tight"
+          <motion.h2
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            className="mb-6 font-display font-black leading-tight"
+            style={{
+              fontSize: "clamp(38px, 6vw, 76px)",
+              color: "#f5f0e8",
+              letterSpacing: "-0.03em",
+            }}
+          >
+            A criminal machine
+            <br />
+            <span className="gold-text">built for control</span>
+          </motion.h2>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mb-8 max-w-[560px] text-base leading-relaxed md:text-lg"
+            style={{ color: "rgba(245,240,232,0.58)" }}
+          >
+            Baroque Works weaponized secrecy, rank, and loyalty. The result was
+            less a crew than a system: one that could infiltrate a kingdom,
+            erase witnesses, and keep its true leader almost invisible.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            <Link
+              href="/baroque"
+              className="inline-flex items-center gap-3 rounded-full px-6 py-3 text-sm font-semibold uppercase tracking-[0.24em] transition-transform duration-300 hover:-translate-y-0.5"
               style={{
-                fontSize: "clamp(36px, 6vw, 72px)",
-                color: "#f5f0e8",
-                letterSpacing: "-0.02em",
+                background: "rgba(201,168,76,0.1)",
+                color: "#c9a84c",
+                border: "1px solid rgba(201,168,76,0.24)",
               }}
             >
-              The Secret
-              <br />
-              <span className="gold-text">Criminal Empire</span>
-            </motion.h2>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-base leading-relaxed mb-8"
-              style={{ color: "rgba(245,240,232,0.55)", maxWidth: "420px" }}
-            >
-              Operating under the guise of a bounty hunting agency, Baroque
-              Works was a massive criminal organization led by the Warlord of
-              the Sea, Crocodile. With agents ranked by number and partnered by
-              gender, the organization&apos;s true goal was to seize control of
-              the kingdom of Alabasta.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
-              <Link
-                href="/baroque"
-                className="inline-flex items-center gap-3 text-sm tracking-widest uppercase font-medium transition-colors group"
-                style={{ color: "#c9a84c" }}
-              >
-                Meet the Agents
-                <span className="transition-transform group-hover:translate-x-2 duration-300">
-                  →
-                </span>
-              </Link>
-            </motion.div>
-          </div>
-
-          {/* Right — stats */}
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="grid grid-cols-2 gap-4"
-          >
-            {[
-              { number: "9", label: "Numbered Agents" },
-              { number: "Mr. 0", label: "President" },
-              { number: "Alabasta", label: "Target Kingdom" },
-              { number: "4", label: "Devil Fruit Users" },
-            ].map((stat, i) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, delay: 0.3 + i * 0.1 }}
-                className="p-6 rounded-sm gold-border"
-                style={{
-                  background: "rgba(201,168,76,0.03)",
-                }}
-              >
-                <p
-                  className="font-display font-black mb-1"
-                  style={{
-                    fontSize: "clamp(24px, 4vw, 36px)",
-                    color: "#c9a84c",
-                  }}
-                >
-                  {stat.number}
-                </p>
-                <p
-                  className="text-xs tracking-widest uppercase"
-                  style={{ color: "rgba(245,240,232,0.4)" }}
-                >
-                  {stat.label}
-                </p>
-              </motion.div>
-            ))}
+              Meet the agents
+              <ArrowRight size={16} />
+            </Link>
           </motion.div>
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, x: 40 }}
+          animate={inView ? { opacity: 1, x: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="grid gap-4"
+        >
+          {facts.map((fact, index) => (
+            <motion.div
+              key={fact.title}
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
+              className="panel-dark rounded-[1.6rem] p-6"
+            >
+              <p className="mb-3 font-display text-2xl font-bold text-baroque-cream">
+                {fact.title}
+              </p>
+              <p
+                className="text-sm leading-relaxed"
+                style={{ color: "rgba(245,240,232,0.55)" }}
+              >
+                {fact.text}
+              </p>
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
     </section>
   );

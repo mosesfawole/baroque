@@ -17,9 +17,15 @@ export default function BaroquePage() {
         <CharacterGrid
           characters={baroqueAgents}
           title="The Agents"
-          subtitle="Each agent is assigned a number and a partner of the opposite gender. Together they form the most dangerous criminal network in the Grand Line."
-          label="Baroque Works"
+          subtitle="Each operative carries a codename, a mission, and a place inside Crocodile's larger design for Alabasta."
+          intro="From assassins and infiltrators to living weapons, Baroque Works was built like a hidden empire. Browse the organization as a dossier rather than a simple cast list."
+          label="Baroque Works Archive"
           accentColor="#c9a84c"
+          facts={[
+            { value: "9", label: "Core operatives" },
+            { value: "2", label: "Royal targets" },
+            { value: "1", label: "Hidden mastermind" },
+          ]}
           dark
         />
       </main>

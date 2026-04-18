@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import type { Character } from "@/types";
 
@@ -9,8 +10,16 @@ interface Props {
   index: number;
 }
 
+function getCardSummary(character: Character) {
+  if (character.personality.length <= 92) {
+    return character.personality;
+  }
+
+  return `${character.personality.slice(0, 89)}...`;
+}
+
 export default function CharacterCard({ character, index }: Props) {
-  const isFaction = character.faction === "baroque";
+  const isBaroque = character.faction === "baroque";
   const reduceMotion = useReducedMotion();
 
   return (
@@ -25,154 +34,146 @@ export default function CharacterCard({ character, index }: Props) {
       <Link
         href={`/character/${character.id}`}
         aria-label={`View ${character.name}`}
-        className="block group"
+        className="group block h-full"
       >
-        <div
-          className="relative overflow-hidden transition-all duration-500"
+        <article
+          className="relative flex h-full flex-col overflow-hidden rounded-[1.6rem] transition-transform duration-500 group-hover:-translate-y-1"
           style={{
-            background: isFaction ? "#111111" : "#ffffff",
+            background: isBaroque
+              ? "linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.02))"
+              : "linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.88))",
             border: `1px solid ${
-              isFaction ? "rgba(201,168,76,0.12)" : "rgba(26,26,26,0.08)"
+              isBaroque ? "rgba(255,255,255,0.08)" : "rgba(26,26,26,0.08)"
             }`,
-            borderRadius: "4px",
-            boxShadow: isFaction
-              ? "0 4px 24px rgba(0,0,0,0.4)"
-              : "0 4px 16px rgba(0,0,0,0.06)",
+            boxShadow: isBaroque
+              ? "0 20px 42px rgba(0,0,0,0.28)"
+              : "0 18px 34px rgba(26,26,26,0.08)",
           }}
         >
           <div
-            className="h-0.5 w-full transition-all duration-500 group-hover:h-1"
+            className="absolute inset-x-0 top-0 h-1"
             style={{ background: character.color }}
           />
 
-          <div className="p-6">
-            <div className="mb-4 flex items-center justify-between gap-4">
+          <div className="flex flex-1 flex-col p-6">
+            <div className="mb-5 flex items-start justify-between gap-4">
               <span
-                className="rounded-sm px-2 py-1 text-[10px] font-medium uppercase tracking-[0.3em]"
+                className="rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.24em]"
                 style={{
-                  background: `${character.color}18`,
+                  background: `${character.color}16`,
                   color: character.color,
-                  border: `1px solid ${character.color}30`,
+                  border: `1px solid ${character.color}28`,
                 }}
               >
                 {character.codename}
               </span>
 
-              {character.ability.type !== "None" ? (
-                <span
-                  className="text-[10px] font-medium uppercase tracking-wider"
-                  style={{
-                    color: isFaction
-                      ? "rgba(245,240,232,0.25)"
-                      : "rgba(26,26,26,0.3)",
-                  }}
-                >
-                  {character.ability.type}
-                </span>
-              ) : null}
-            </div>
-
-            <div
-              className="mb-6 flex w-full items-center justify-center transition-transform duration-500 group-hover:scale-105"
-              style={{ height: "120px" }}
-            >
-              <div
-                className="relative"
+              <span
+                className="text-[10px] uppercase tracking-[0.22em]"
                 style={{
-                  width: "80px",
-                  height: "80px",
+                  color: isBaroque
+                    ? "rgba(245,240,232,0.36)"
+                    : "rgba(26,26,26,0.38)",
                 }}
               >
+                {character.ability.type === "None"
+                  ? "Combat style"
+                  : character.ability.type}
+              </span>
+            </div>
+
+            <div className="mb-6 flex flex-1 items-center justify-center">
+              <div className="relative flex h-28 w-28 items-center justify-center">
                 <div
-                  className="absolute inset-0 rounded-full animate-spin-slow"
+                  className="absolute inset-0 rounded-full opacity-70"
                   style={{
+                    background: `radial-gradient(circle, ${character.color}22 0%, transparent 70%)`,
+                  }}
+                />
+                <div
+                  className="absolute inset-2 rounded-full border"
+                  style={{ borderColor: `${character.color}26` }}
+                />
+                <div
+                  className="absolute inset-[28px] rounded-full"
+                  style={{
+                    background: `${character.color}18`,
                     border: `1px solid ${character.color}30`,
                   }}
                 />
                 <div
-                  className="absolute inset-3 rounded-full"
-                  style={{
-                    background: `${character.color}15`,
-                    border: `1px solid ${character.color}40`,
-                  }}
+                  className="absolute h-3.5 w-3.5 rounded-full shadow-[0_0_20px_currentColor]"
+                  style={{ background: character.color, color: character.color }}
                 />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div
-                    className="h-3 w-3 rounded-full"
-                    style={{ background: character.color }}
-                  />
-                </div>
               </div>
             </div>
 
-            <h3
-              className="mb-1 font-display text-base font-bold transition-colors duration-300"
-              style={{
-                color: isFaction ? "#f5f0e8" : "#1a1a1a",
-                letterSpacing: "-0.01em",
-              }}
-            >
-              {character.name}
-            </h3>
-
-            <p
-              className="mb-4 text-xs"
-              style={{
-                color: isFaction
-                  ? "rgba(245,240,232,0.4)"
-                  : "rgba(26,26,26,0.45)",
-              }}
-            >
-              {character.role}
-            </p>
-
-            <div
-              className="pt-4"
-              style={{
-                borderTop: `1px solid ${
-                  isFaction ? "rgba(255,255,255,0.06)" : "rgba(26,26,26,0.08)"
-                }`,
-              }}
-            >
+            <div className="mb-5">
+              <h3
+                className="mb-2 font-display text-xl font-bold"
+                style={{ color: isBaroque ? "#f5f0e8" : "#1a1a1a" }}
+              >
+                {character.name}
+              </h3>
               <p
-                className="mb-1 text-[11px] uppercase tracking-wider"
+                className="mb-3 text-sm"
                 style={{
-                  color: isFaction
-                    ? "rgba(245,240,232,0.25)"
-                    : "rgba(26,26,26,0.3)",
+                  color: isBaroque
+                    ? "rgba(245,240,232,0.52)"
+                    : "rgba(26,26,26,0.5)",
                 }}
               >
-                Ability
+                {character.role}
               </p>
               <p
-                className="text-xs font-medium"
+                className="text-sm leading-relaxed"
                 style={{
-                  color: character.color,
+                  color: isBaroque
+                    ? "rgba(245,240,232,0.6)"
+                    : "rgba(26,26,26,0.58)",
                 }}
               >
-                {character.ability.name}
+                {getCardSummary(character)}
               </p>
             </div>
-          </div>
 
-          <div
-            className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-            style={{
-              background: `${character.color}10`,
-              backdropFilter: "blur(2px)",
-            }}
-          >
-            <span
-              className="rounded-sm px-4 py-2 text-xs font-medium uppercase tracking-[0.3em]"
+            <div
+              className="mt-auto flex items-center justify-between border-t pt-4"
               style={{
-                background: character.color,
-                color: "#0a0a0a",
+                borderColor: isBaroque
+                  ? "rgba(255,255,255,0.08)"
+                  : "rgba(26,26,26,0.08)",
               }}
             >
-              View Profile
-            </span>
+              <div>
+                <p
+                  className="mb-1 text-[10px] uppercase tracking-[0.24em]"
+                  style={{
+                    color: isBaroque
+                      ? "rgba(245,240,232,0.32)"
+                      : "rgba(26,26,26,0.36)",
+                  }}
+                >
+                  Signature
+                </p>
+                <p
+                  className="text-sm font-medium"
+                  style={{ color: character.color }}
+                >
+                  {character.ability.name}
+                </p>
+              </div>
+
+              <span
+                className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.24em]"
+                style={{ color: isBaroque ? "#f5f0e8" : "#1a1a1a" }}
+              >
+                Open
+                <ArrowRight size={14} style={{ color: character.color }} />
+              </span>
+            </div>
           </div>
-        </div>
+        </article>
       </Link>
     </motion.div>
   );
