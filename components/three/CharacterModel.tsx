@@ -1,18 +1,18 @@
 "use client";
-import { useRef, Suspense, useMemo } from "react";
+
+import { Suspense, useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import {
-  OrbitControls,
-  MeshDistortMaterial,
-  Float,
-  Environment,
-  Sphere,
   Box,
+  Environment,
+  Float,
+  MeshDistortMaterial,
   Octahedron,
+  OrbitControls,
+  Sphere,
 } from "@react-three/drei";
 import * as THREE from "three";
 
-// Different shapes for different characters — makes each feel unique
 const SHAPE_MAP: Record<string, string> = {
   "mr-0": "octahedron",
   "mr-1": "box",
@@ -39,13 +39,35 @@ interface CharacterShapeProps {
   color: string;
 }
 
+interface CharacterModelProps {
+  characterId: string;
+  color: string;
+}
+
+function createParticleGeometry(count: number) {
+  const geometry = new THREE.BufferGeometry();
+  const positions = new Float32Array(count * 3);
+
+  for (let index = 0; index < count; index += 1) {
+    const radius = 2.5 + Math.random() * 1.5;
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+
+    positions[index * 3] = radius * Math.sin(phi) * Math.cos(theta);
+    positions[index * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+    positions[index * 3 + 2] = radius * Math.cos(phi);
+  }
+
+  geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+  return geometry;
+}
+
 function CharacterShape({ characterId, color }: CharacterShapeProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const shape = SHAPE_MAP[characterId] ?? "sphere";
 
   useFrame((state) => {
     if (!meshRef.current) return;
-    // Gentle auto-rotate when not being dragged
     meshRef.current.rotation.y = state.clock.elapsedTime * 0.3;
   });
 
@@ -62,34 +84,33 @@ function CharacterShape({ characterId, color }: CharacterShapeProps) {
 
   return (
     <Float speed={1.5} rotationIntensity={0.3} floatIntensity={0.5}>
-      {shape === "sphere" && (
-        <Sphere ref={meshRef} args={[1.2, 64, 64]}>
+      {shape === "sphere" ? (
+        <Sphere ref={meshRef} args={[1.2, 40, 40]}>
           {material}
         </Sphere>
-      )}
-      {shape === "box" && (
+      ) : null}
+      {shape === "box" ? (
         <Box ref={meshRef} args={[1.8, 1.8, 1.8]}>
           {material}
         </Box>
-      )}
-      {shape === "octahedron" && (
+      ) : null}
+      {shape === "octahedron" ? (
         <Octahedron ref={meshRef} args={[1.3]}>
           {material}
         </Octahedron>
-      )}
-      {shape === "torus" && (
+      ) : null}
+      {shape === "torus" ? (
         <mesh ref={meshRef}>
-          <torusGeometry args={[1, 0.4, 32, 64]} />
+          <torusGeometry args={[1, 0.4, 24, 48]} />
           {material}
         </mesh>
-      )}
-      {/* Spike shape — custom geometry */}
-      {shape === "spike" && (
+      ) : null}
+      {shape === "spike" ? (
         <mesh ref={meshRef}>
           <coneGeometry args={[0.8, 2.5, 8]} />
           {material}
         </mesh>
-      )}
+      ) : null}
     </Float>
   );
 }
@@ -113,25 +134,7 @@ function OrbitRing({ color }: { color: string }) {
 
 function Particles({ color }: { color: string }) {
   const points = useRef<THREE.Points>(null);
-
-  const geometry = useMemo(() => {
-    const geo = new THREE.BufferGeometry();
-    const count = 80;
-    const positions = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) {
-      // eslint-disable-next-line react-hooks/purity
-      const radius = 2.5 + Math.random() * 1.5;
-      // eslint-disable-next-line react-hooks/purity
-      const theta = Math.random() * Math.PI * 2;
-      // eslint-disable-next-line react-hooks/purity
-      const phi = Math.acos(2 * Math.random() - 1);
-      positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-      positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
-      positions[i * 3 + 2] = radius * Math.cos(phi);
-    }
-    geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-    return geo;
-  }, []);
+  const geometry = useMemo(() => createParticleGeometry(56), []);
 
   useFrame((state) => {
     if (!points.current) return;
@@ -151,11 +154,6 @@ function Particles({ color }: { color: string }) {
   );
 }
 
-interface CharacterModelProps {
-  characterId: string;
-  color: string;
-}
-
 export default function CharacterModel({
   characterId,
   color,
@@ -163,11 +161,11 @@ export default function CharacterModel({
   return (
     <Canvas
       camera={{ position: [0, 0, 5.5], fov: 45 }}
+      dpr={[1, 1.5]}
       style={{ background: "transparent" }}
-      gl={{ alpha: true, antialias: true }}
+      gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
     >
       <Suspense fallback={null}>
-        {/* Lighting */}
         <ambientLight intensity={0.3} />
         <directionalLight position={[5, 5, 5]} intensity={2} color={color} />
         <directionalLight
@@ -177,24 +175,20 @@ export default function CharacterModel({
         />
         <pointLight position={[0, 2, 3]} intensity={1} color={color} />
 
-        {/* Character shape */}
         <CharacterShape characterId={characterId} color={color} />
-
-        {/* Decorative elements */}
         <OrbitRing color={color} />
         <Particles color={color} />
 
-        {/* Controls — user can rotate and zoom */}
         <OrbitControls
           enablePan={false}
-          enableZoom={true}
+          enableZoom
           minDistance={3}
           maxDistance={8}
           autoRotate={false}
           makeDefault
         />
 
-        <Environment preset="night" />
+        <Environment preset="night" resolution={128} />
       </Suspense>
     </Canvas>
   );

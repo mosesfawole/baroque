@@ -3,29 +3,28 @@ import Link from "next/link";
 export default function Footer() {
   return (
     <footer
-      className="py-12 px-6 md:px-12"
+      aria-label="Site footer"
+      className="px-6 py-12 md:px-12"
       style={{
         background: "#0a0a0a",
         borderTop: "1px solid rgba(201,168,76,0.1)",
       }}
     >
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-        {/* Logo */}
+      <div className="max-w-7xl mx-auto flex flex-col items-center justify-between gap-6 md:flex-row">
         <div className="flex items-center gap-3">
           <div
-            className="w-6 h-6 rounded-sm flex items-center justify-center"
+            className="flex h-6 w-6 items-center justify-center rounded-sm"
             style={{ background: "linear-gradient(135deg, #c9a84c, #8b1a1a)" }}
           >
-            <span className="font-display font-black text-[10px] text-white">
+            <span className="font-display text-[10px] font-black text-white">
               BW
             </span>
           </div>
-          <span className="font-display text-xs tracking-widest uppercase text-baroque-cream opacity-60">
+          <span className="font-display text-xs uppercase tracking-widest text-baroque-cream opacity-60">
             Baroque Works
           </span>
         </div>
 
-        {/* Links */}
         <div className="flex items-center gap-6">
           {[
             { href: "/baroque", label: "Baroque Works" },
@@ -34,7 +33,7 @@ export default function Footer() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-xs tracking-widest uppercase transition-colors"
+              className="text-xs uppercase tracking-widest transition-colors"
               style={{ color: "rgba(245,240,232,0.4)" }}
             >
               {link.label}
@@ -42,9 +41,8 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Credit */}
         <p className="text-xs" style={{ color: "rgba(245,240,232,0.3)" }}>
-          © 2026 — Fan project by{" "}
+          &copy; 2026 - Fan project by{" "}
           <Link
             href="https://github.com/mosesfawole"
             target="_blank"

@@ -9,7 +9,7 @@ export default function HomePage() {
   return (
     <PageTransition>
       <Navbar />
-      <main>
+      <main id="main-content">
         <Hero />
         <BaroqueSection />
         <div className="gold-divider" />

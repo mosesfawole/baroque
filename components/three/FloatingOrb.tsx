@@ -82,8 +82,9 @@ export default function FloatingOrb() {
   return (
     <Canvas
       camera={{ position: [0, 0, 5], fov: 45 }}
+      dpr={[1, 1.5]}
       style={{ background: "transparent" }}
-      gl={{ alpha: true, antialias: true }}
+      gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
     >
       <Suspense fallback={null}>
         <ambientLight intensity={0.4} />
@@ -103,7 +104,7 @@ export default function FloatingOrb() {
         <CrimsonRing />
         <GoldRing />
 
-        <Environment preset="night" />
+        <Environment preset="night" resolution={128} />
       </Suspense>
     </Canvas>
   );

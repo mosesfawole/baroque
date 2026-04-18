@@ -1,8 +1,9 @@
 "use client";
-import { useState, useEffect } from "react";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
 const navLinks = [
@@ -17,18 +18,44 @@ export default function Navbar() {
   const pathname = usePathname();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60);
-    window.addEventListener("scroll", onScroll);
+    const onScroll = () => {
+      const nextValue = window.scrollY > 60;
+      setScrolled((current) =>
+        current === nextValue ? current : nextValue,
+      );
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close mobile menu when the route changes by closing on link click.
-  // This avoids a synchronous setState call in an effect (eslint/react-hooks/set-state-in-effect).
-  // We keep menu state in local state and drive it from user interactions.
+  useEffect(() => {
+    if (!menuOpen) {
+      document.body.style.removeProperty("overflow");
+      return;
+    }
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+      }
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.body.style.removeProperty("overflow");
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [menuOpen]);
 
   return (
     <>
       <motion.nav
+        aria-label="Primary"
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
@@ -39,64 +66,71 @@ export default function Navbar() {
           borderBottom: scrolled ? "1px solid rgba(201,168,76,0.1)" : "none",
         }}
       >
-        <div className="max-w-7xl mx-auto px-6 md:px-12 h-16 flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-3">
+        <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-6 md:px-12">
+          <Link
+            href="/"
+            className="flex items-center gap-3"
+            onClick={() => setMenuOpen(false)}
+          >
             <div
-              className="w-8 h-8 rounded-sm flex items-center justify-center"
+              className="flex h-8 w-8 items-center justify-center rounded-sm"
               style={{
                 background: "linear-gradient(135deg, #c9a84c, #8b1a1a)",
               }}
             >
-              <span className="font-display font-black text-xs text-white">
+              <span className="font-display text-xs font-black text-white">
                 BW
               </span>
             </div>
-            <span className="font-display font-bold text-sm tracking-widest text-baroque-cream uppercase">
+            <span className="font-display text-sm font-bold uppercase tracking-widest text-baroque-cream">
               Baroque Works
             </span>
           </Link>
 
-          {/* Desktop links */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden items-center gap-8 md:flex">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
+
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="relative text-xs tracking-widest uppercase font-medium transition-colors duration-300"
+                  aria-current={isActive ? "page" : undefined}
+                  className="relative text-xs font-medium uppercase tracking-widest transition-colors duration-300"
                   style={{
                     color: isActive ? "#c9a84c" : "rgba(245,240,232,0.6)",
                   }}
                 >
                   {link.label}
-                  {isActive && (
+                  {isActive ? (
                     <motion.div
                       layoutId="nav-indicator"
                       className="absolute -bottom-1 left-0 right-0 h-px"
                       style={{ background: "#c9a84c" }}
                     />
-                  )}
+                  ) : null}
                 </Link>
               );
             })}
           </div>
 
-          {/* Mobile hamburger */}
           <button
-            className="md:hidden p-2 text-baroque-cream"
-            onClick={() => setMenuOpen(!menuOpen)}
+            type="button"
+            className="p-2 text-baroque-cream md:hidden"
+            onClick={() => setMenuOpen((current) => !current)}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-navigation"
+            aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
           >
             {menuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </motion.nav>
 
-      {/* Mobile menu */}
       <AnimatePresence>
-        {menuOpen && (
+        {menuOpen ? (
           <motion.div
+            id="mobile-navigation"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
@@ -104,17 +138,18 @@ export default function Navbar() {
             className="fixed inset-0 z-40 flex flex-col items-center justify-center"
             style={{ background: "rgba(10,10,10,0.97)" }}
           >
-            {navLinks.map((link, i) => (
+            {navLinks.map((link, index) => (
               <motion.div
                 key={link.href}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
+                transition={{ delay: index * 0.1 }}
               >
                 <Link
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
-                  className="block py-4 text-2xl font-display tracking-widest uppercase text-center"
+                  aria-current={pathname === link.href ? "page" : undefined}
+                  className="block py-4 text-center font-display text-2xl uppercase tracking-widest"
                   style={{
                     color:
                       pathname === link.href
@@ -127,7 +162,7 @@ export default function Navbar() {
               </motion.div>
             ))}
           </motion.div>
-        )}
+        ) : null}
       </AnimatePresence>
     </>
   );

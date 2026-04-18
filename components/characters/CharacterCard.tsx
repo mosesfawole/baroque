@@ -1,6 +1,7 @@
 "use client";
+
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import type { Character } from "@/types";
 
 interface Props {
@@ -10,15 +11,22 @@ interface Props {
 
 export default function CharacterCard({ character, index }: Props) {
   const isFaction = character.faction === "baroque";
+  const reduceMotion = useReducedMotion();
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
+      initial={reduceMotion ? false : { opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.5, delay: index * 0.08 }}
+      transition={
+        reduceMotion ? { duration: 0 } : { duration: 0.45, delay: index * 0.05 }
+      }
     >
-      <Link href={`/character/${character.id}`} className="block group">
+      <Link
+        href={`/character/${character.id}`}
+        aria-label={`View ${character.name}`}
+        className="block group"
+      >
         <div
           className="relative overflow-hidden transition-all duration-500"
           style={{
@@ -32,18 +40,15 @@ export default function CharacterCard({ character, index }: Props) {
               : "0 4px 16px rgba(0,0,0,0.06)",
           }}
         >
-          {/* Top color bar */}
           <div
             className="h-0.5 w-full transition-all duration-500 group-hover:h-1"
             style={{ background: character.color }}
           />
 
-          {/* Card body */}
           <div className="p-6">
-            {/* Codename badge */}
-            <div className="flex items-center justify-between mb-4">
+            <div className="mb-4 flex items-center justify-between gap-4">
               <span
-                className="text-[10px] tracking-[0.3em] uppercase font-medium px-2 py-1 rounded-sm"
+                className="rounded-sm px-2 py-1 text-[10px] font-medium uppercase tracking-[0.3em]"
                 style={{
                   background: `${character.color}18`,
                   color: character.color,
@@ -53,10 +58,9 @@ export default function CharacterCard({ character, index }: Props) {
                 {character.codename}
               </span>
 
-              {/* Devil fruit type badge */}
-              {character.ability.type !== "None" && (
+              {character.ability.type !== "None" ? (
                 <span
-                  className="text-[10px] tracking-wider uppercase font-medium"
+                  className="text-[10px] font-medium uppercase tracking-wider"
                   style={{
                     color: isFaction
                       ? "rgba(245,240,232,0.25)"
@@ -65,12 +69,11 @@ export default function CharacterCard({ character, index }: Props) {
                 >
                   {character.ability.type}
                 </span>
-              )}
+              ) : null}
             </div>
 
-            {/* Abstract shape — unique per character */}
             <div
-              className="w-full mb-6 flex items-center justify-center transition-transform duration-500 group-hover:scale-105"
+              className="mb-6 flex w-full items-center justify-center transition-transform duration-500 group-hover:scale-105"
               style={{ height: "120px" }}
             >
               <div
@@ -80,14 +83,12 @@ export default function CharacterCard({ character, index }: Props) {
                   height: "80px",
                 }}
               >
-                {/* Outer ring */}
                 <div
                   className="absolute inset-0 rounded-full animate-spin-slow"
                   style={{
                     border: `1px solid ${character.color}30`,
                   }}
                 />
-                {/* Inner circle */}
                 <div
                   className="absolute inset-3 rounded-full"
                   style={{
@@ -95,19 +96,17 @@ export default function CharacterCard({ character, index }: Props) {
                     border: `1px solid ${character.color}40`,
                   }}
                 />
-                {/* Center dot */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div
-                    className="w-3 h-3 rounded-full"
+                    className="h-3 w-3 rounded-full"
                     style={{ background: character.color }}
                   />
                 </div>
               </div>
             </div>
 
-            {/* Name */}
             <h3
-              className="font-display font-bold text-base mb-1 transition-colors duration-300"
+              className="mb-1 font-display text-base font-bold transition-colors duration-300"
               style={{
                 color: isFaction ? "#f5f0e8" : "#1a1a1a",
                 letterSpacing: "-0.01em",
@@ -116,9 +115,8 @@ export default function CharacterCard({ character, index }: Props) {
               {character.name}
             </h3>
 
-            {/* Role */}
             <p
-              className="text-xs mb-4"
+              className="mb-4 text-xs"
               style={{
                 color: isFaction
                   ? "rgba(245,240,232,0.4)"
@@ -128,7 +126,6 @@ export default function CharacterCard({ character, index }: Props) {
               {character.role}
             </p>
 
-            {/* Ability name */}
             <div
               className="pt-4"
               style={{
@@ -138,7 +135,7 @@ export default function CharacterCard({ character, index }: Props) {
               }}
             >
               <p
-                className="text-[11px] tracking-wider uppercase mb-1"
+                className="mb-1 text-[11px] uppercase tracking-wider"
                 style={{
                   color: isFaction
                     ? "rgba(245,240,232,0.25)"
@@ -158,16 +155,15 @@ export default function CharacterCard({ character, index }: Props) {
             </div>
           </div>
 
-          {/* Hover overlay — View Profile */}
           <div
-            className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100"
             style={{
               background: `${character.color}10`,
               backdropFilter: "blur(2px)",
             }}
           >
             <span
-              className="text-xs tracking-[0.3em] uppercase font-medium px-4 py-2 rounded-sm"
+              className="rounded-sm px-4 py-2 text-xs font-medium uppercase tracking-[0.3em]"
               style={{
                 background: character.color,
                 color: "#0a0a0a",
